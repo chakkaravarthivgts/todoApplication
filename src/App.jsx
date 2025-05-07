@@ -177,7 +177,7 @@ const TodoList = ({ setformdata, formdata }) => {
         return (
           <ul
             key={list.id}
-            className="flex flex-col items-center p-6 m-5 rounded-xl shadow-lg/20 w-60 h-60 "
+            className="flex flex-col items-center p-6 m-5 rounded-xl shadow-lg/20 w-60 h-60 bg-gradient-to-b from-[#f4f0fc] to-white"
           >
             <li className="test-md capitalize p-2 mb-2 font-bold text-center">
               {list.todoName}
