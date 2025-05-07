@@ -21,7 +21,6 @@ function App() {
     <>
       <div>
         <FormTodo />
-        {/* <TodoList /> */}
       </div>
     </>
   );
@@ -170,6 +169,13 @@ const TodoList = ({ setformdata, formdata }) => {
 
   //   fetchdata();
   // }, []);
+  if (isLoading) {
+    return (
+      <h1 className="flex items-center justify-center text-bold">
+        Loading ...
+      </h1>
+    );
+  }
 
   return (
     <div className="flex flex-wrap p-4">
