@@ -13,6 +13,8 @@ import {
   useQueryClient,
   QueryClient,
 } from "@tanstack/react-query";
+import Tabletodo from "./components/antdesigntable";
+import FormComponents from "./components/formcomponent";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -20,7 +22,8 @@ function App() {
   return (
     <>
       <div>
-        <FormTodo />
+        {/* <FormTodo /> */}
+        <FormComponents />
       </div>
     </>
   );
@@ -128,7 +131,8 @@ const FormTodo = () => {
           <div className="flex justify-center"></div>
         </div>
       </div>
-      <TodoList setformdata={setformdata} formdata={formdata} />
+      {/* <TodoList setformdata={setformdata} formdata={formdata} /> */}
+      <Tabletodo setformdata={setformdata} formdata={formdata} />
     </>
   );
 };
