@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deletetodoitem, getTodoList, updatestatus } from "../api/api";
 import Column from "antd/es/table/Column";
 
-const Tabletodo = ({ formdata, setformdata }) => {
+const Tabletodo = ({ setformdata }) => {
   const {
     data: dataSource,
     isLoading,

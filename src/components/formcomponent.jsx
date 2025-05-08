@@ -117,7 +117,7 @@ const FormComponents = () => {
         </div>
       </div>
       {/* table coponents */}
-      <Tabletodo setformdata={setformdata} formdata={formdata} />
+      <Tabletodo setformdata={setformdata} />
     </>
   );
 };
