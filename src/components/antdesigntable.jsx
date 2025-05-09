@@ -2,10 +2,11 @@ import { Table, Space, Tag } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deletetodoitem, getTodoList, updatestatus } from "../api/api";
 import Column from "antd/es/table/Column";
+import { useEffect, useState } from "react";
 
 const Tabletodo = ({ setformdata }) => {
   const {
-    data: dataSource,
+    data: data,
     isLoading,
     isError,
   } = useQuery({ queryKey: ["todos"], queryFn: getTodoList });
@@ -37,9 +38,9 @@ const Tabletodo = ({ setformdata }) => {
       <div className="p-4 max-w-3xl mx-auto">
         <Table
           className="rounded-xl shadow-xl/20"
-          dataSource={dataSource}
+          dataSource={data}
           rowKey={"id"}
-          pagination={{ position: ["bottomcenter"] }}
+          pagination={{ position: ["bottomcenter"], defaultPageSize: [10] }}
         >
           <Column title="Todo No" dataIndex="id" className="text-center" />
           <Column
@@ -90,8 +91,6 @@ const Tabletodo = ({ setformdata }) => {
                   className="text-[#6E33FF]! text-center"
                   onClick={() => {
                     setformdata(record);
-                    filteredDataSource(record.id);
-                    console.log(record.id);
                   }}
                 >
                   Update
