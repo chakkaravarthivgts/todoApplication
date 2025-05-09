@@ -39,22 +39,26 @@ const Tabletodo = ({ setformdata }) => {
           className="rounded-xl shadow-xl/20"
           dataSource={dataSource}
           rowKey={"id"}
+          pagination={{ position: ["bottomcenter"] }}
         >
           <Column title="Todo No" dataIndex="id" className="text-center" />
           <Column
             title="Todo Name"
             dataIndex="todoName"
             className="text-center"
+            align="center"
           />
           <Column
             title="Todo Description"
             dataIndex="todoDescription"
             className="text-center"
+            align="center"
           />
           <Column
             className=""
             title="Todo Status"
             dataIndex="todostatus"
+            align="center"
             render={(_, rec) => {
               {
                 return rec.todoStatus ? (
@@ -84,7 +88,11 @@ const Tabletodo = ({ setformdata }) => {
               <Space size="middle" className="text-[#6E33FF]!">
                 <a
                   className="text-[#6E33FF]! text-center"
-                  onClick={() => setformdata(record)}
+                  onClick={() => {
+                    setformdata(record);
+                    filteredDataSource(record.id);
+                    console.log(record.id);
+                  }}
                 >
                   Update
                 </a>
@@ -96,6 +104,7 @@ const Tabletodo = ({ setformdata }) => {
                 </a>
               </Space>
             )}
+            align="center"
           />
         </Table>
       </div>
