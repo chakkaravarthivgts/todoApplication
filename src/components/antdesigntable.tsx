@@ -1,7 +1,13 @@
-import { Table, Space, Tag } from "antd";
+import { Table, Space, Tag, Button, Modal, Input } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deletetodoitem, getTodoList, updatestatus } from "../api/api";
+import {
+  deletetodoitem,
+  getTodoList,
+  updatestatus,
+  updateTodoitem,
+} from "../api/api";
 import Column from "antd/es/table/Column";
+import { Dispatch, SetStateAction, useState } from "react";
 
 //type script type decalaration
 //data sourse
@@ -15,14 +21,51 @@ export interface TodoItem {
 //props type
 interface TableTodoProps {
   setformdata: (record: TodoItem) => void;
+  formdata: TodoItem;
 }
 
-const Tabletodo: React.FC<TableTodoProps> = ({ setformdata }) => {
+//button to popup
+
+const Tabletodo: React.FC<TableTodoProps> = ({ setformdata, formdata }) => {
   const {
     data: data,
     isLoading,
     isError,
   } = useQuery<TodoItem[]>({ queryKey: ["todos"], queryFn: getTodoList });
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // state to manage popup
+  const [value, setvalue] = useState<TodoItem>({
+    id: null,
+    todoName: "",
+    todoDescription: "",
+    todoStatus: false,
+  }); // data
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const { mutateAsync: updatetodoform } = useMutation({
+    mutationFn: updateTodoitem,
+    onSuccess: () => {
+      query.invalidateQueries({ queryKey: ["todos"] });
+      setvalue({
+        todoName: "",
+        todoDescription: "",
+        id: null,
+        todoStatus: false,
+      });
+      handleOk();
+    },
+  });
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const query = useQueryClient();
 
@@ -107,7 +150,8 @@ const Tabletodo: React.FC<TableTodoProps> = ({ setformdata }) => {
                 <a
                   className="text-[#6E33FF]! text-center"
                   onClick={() => {
-                    setformdata(record);
+                    showModal();
+                    setvalue(record);
                   }}
                 >
                   Update
@@ -123,9 +167,70 @@ const Tabletodo: React.FC<TableTodoProps> = ({ setformdata }) => {
             align="center"
           />
         </Table>
+        <Popup
+          isModalOpen={isModalOpen}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          value={value}
+          updatetodoform={updatetodoform}
+          setvalue={setvalue}
+        />
       </div>
     </>
   );
 };
 
 export default Tabletodo;
+
+interface PopupProps {
+  isModalOpen: boolean;
+  handleOk: () => void;
+  handleCancel: () => void;
+  value: TodoItem;
+  updatetodoform: (todo: TodoItem) => Promise<any>;
+  setvalue: Dispatch<SetStateAction<TodoItem>>;
+}
+
+const Popup: React.FC<PopupProps> = ({
+  isModalOpen,
+  handleOk,
+  handleCancel,
+  value,
+  updatetodoform,
+  setvalue,
+}) => {
+  const handlechange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setvalue((pre) => ({
+      ...pre,
+      [name]: value,
+    }));
+  };
+
+  console.log(value);
+  return (
+    <Modal
+      title="Task Edit"
+      open={isModalOpen}
+      onOk={() => updatetodoform(value)}
+      onCancel={handleCancel}
+      bodyProps={{ padding: "16px" }}
+    >
+      <div className="p-4 flex gap-4 flex-col">
+        <Input
+          value={value.todoName}
+          placeholder="Todo Name"
+          className="p-4"
+          name="todoName"
+          onChange={handlechange}
+        />
+        <Input
+          value={value.todoDescription}
+          placeholder="Todo Description"
+          name="todoDescription"
+          onChange={handlechange}
+        />
+      </div>
+    </Modal>
+  );
+};

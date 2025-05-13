@@ -85,35 +85,18 @@ const FormComponents: React.FC = () => {
 
               <Form.Item>
                 <div className="rounded-full border border-[#6E33FF] inset-shadow-sm/20  hover:bg-[#6E33FF]! cursor-pointer p-1 text-sm text-[#6E33FF]">
-                  {formdata.id ? (
-                    <Button
-                      className=" text-[#6E33FF]! hover:text-white!  "
-                      htmlType="submit"
-                      type="link"
-                      onClick={() => {
-                        if (formdata.todoName || formdata.todoDescription) {
-                          if (formdata.id !== null) {
-                            updatetodoform(formdata);
-                          }
-                        }
-                      }}
-                    >
-                      Update
-                    </Button>
-                  ) : (
-                    <Button
-                      className=" text-[#6E33FF]! hover:text-white!  "
-                      htmlType="submit"
-                      type="link"
-                      onClick={() => {
-                        if (formdata.todoName || formdata.todoDescription) {
-                          addtodoitem(formdata);
-                        }
-                      }}
-                    >
-                      Add Todo
-                    </Button>
-                  )}
+                  <Button
+                    className=" text-[#6E33FF]! hover:text-white!  "
+                    htmlType="submit"
+                    type="link"
+                    onClick={() => {
+                      if (formdata.todoName || formdata.todoDescription) {
+                        addtodoitem(formdata);
+                      }
+                    }}
+                  >
+                    Add Todo
+                  </Button>
                 </div>
               </Form.Item>
             </Form>
@@ -123,7 +106,7 @@ const FormComponents: React.FC = () => {
         </div>
       </div>
       {/* table coponents */}
-      <Tabletodo setformdata={setformdata} />
+      <Tabletodo setformdata={setformdata} formdata={formdata} />
     </>
   );
 };
