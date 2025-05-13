@@ -2,28 +2,41 @@ import { Table, Space, Tag } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deletetodoitem, getTodoList, updatestatus } from "../api/api";
 import Column from "antd/es/table/Column";
-import { useEffect, useState } from "react";
 
-const Tabletodo = ({ setformdata }) => {
+//type script type decalaration
+//data sourse
+export interface TodoItem {
+  id: null | number;
+  todoName: string;
+  todoDescription: string;
+  todoStatus: boolean;
+}
+
+//props type
+interface TableTodoProps {
+  setformdata: (record: TodoItem) => void;
+}
+
+const Tabletodo: React.FC<TableTodoProps> = ({ setformdata }) => {
   const {
     data: data,
     isLoading,
     isError,
-  } = useQuery({ queryKey: ["todos"], queryFn: getTodoList });
+  } = useQuery<TodoItem[]>({ queryKey: ["todos"], queryFn: getTodoList });
 
   const query = useQueryClient();
 
   const { mutateAsync: deleteitem } = useMutation({
     mutationFn: deletetodoitem,
     onSuccess: () => {
-      query.invalidateQueries(["todos"]);
+      query.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 
   const { mutateAsync: changestatus } = useMutation({
     mutationFn: updatestatus,
     onSuccess: () => {
-      query.invalidateQueries(["todos"]);
+      query.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 
@@ -40,27 +53,31 @@ const Tabletodo = ({ setformdata }) => {
           className="rounded-xl shadow-xl/20"
           dataSource={data}
           rowKey={"id"}
-          pagination={{ position: ["bottomcenter"], defaultPageSize: [10] }}
+          pagination={{ position: ["bottomCenter"], defaultPageSize: 10 }}
         >
-          <Column title="Todo No" dataIndex="id" className="text-center" />
-          <Column
+          <Column<TodoItem>
+            title="Todo No"
+            dataIndex="id"
+            className="text-center"
+          />
+          <Column<TodoItem>
             title="Todo Name"
             dataIndex="todoName"
             className="text-center"
             align="center"
           />
-          <Column
+          <Column<TodoItem>
             title="Todo Description"
             dataIndex="todoDescription"
             className="text-center"
             align="center"
           />
-          <Column
+          <Column<TodoItem>
             className=""
             title="Todo Status"
             dataIndex="todostatus"
             align="center"
-            render={(_, rec) => {
+            render={(_, rec: TodoItem) => {
               {
                 return rec.todoStatus ? (
                   <Tag
@@ -82,10 +99,10 @@ const Tabletodo = ({ setformdata }) => {
               }
             }}
           />
-          <Column
+          <Column<TodoItem>
             className=""
             title="Action"
-            render={(_, record) => (
+            render={(_, record: TodoItem) => (
               <Space size="middle" className="text-[#6E33FF]!">
                 <a
                   className="text-[#6E33FF]! text-center"

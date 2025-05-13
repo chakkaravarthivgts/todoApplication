@@ -1,19 +1,20 @@
 import { Button, Form, Input } from "antd";
-import Tabletodo from "./antdesigntable";
+import Tabletodo, { TodoItem } from "./antdesigntable";
 import { posttodoitem, updateTodoitem } from "../api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-const FormComponents = () => {
-  const [formdata, setformdata] = useState({
+const FormComponents: React.FC = () => {
+  const [formdata, setformdata] = useState<TodoItem>({
     todoName: "",
     todoDescription: "",
     id: null,
+    todoStatus: false,
   });
 
   const query = useQueryClient();
 
-  const handlechange = (e) => {
+  const handlechange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setformdata((pre) => ({
       ...pre,
@@ -24,10 +25,12 @@ const FormComponents = () => {
   const { mutateAsync: addtodoitem } = useMutation({
     mutationFn: posttodoitem,
     onSuccess: () => {
-      query.invalidateQueries(["todos"]);
+      query.invalidateQueries({ queryKey: ["todos"] });
       setformdata({
         todoName: "",
         todoDescription: "",
+        id: null,
+        todoStatus: false,
       });
     },
   });
@@ -35,11 +38,12 @@ const FormComponents = () => {
   const { mutateAsync: updatetodoform } = useMutation({
     mutationFn: updateTodoitem,
     onSuccess: () => {
-      query.invalidateQueries(["todos"]);
+      query.invalidateQueries({ queryKey: ["todos"] });
       setformdata({
         todoName: "",
         todoDescription: "",
         id: null,
+        todoStatus: false,
       });
     },
   });
@@ -88,7 +92,9 @@ const FormComponents = () => {
                       type="link"
                       onClick={() => {
                         if (formdata.todoName || formdata.todoDescription) {
-                          updatetodoform({ formdata });
+                          if (formdata.id !== null) {
+                            updatetodoform(formdata);
+                          }
                         }
                       }}
                     >
@@ -101,7 +107,7 @@ const FormComponents = () => {
                       type="link"
                       onClick={() => {
                         if (formdata.todoName || formdata.todoDescription) {
-                          addtodoitem({ formdata });
+                          addtodoitem(formdata);
                         }
                       }}
                     >

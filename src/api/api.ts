@@ -9,13 +9,20 @@ export {
   updateTodoitem,
 };
 
+interface TodoItem {
+  id: number | null;
+  todoStatus: boolean;
+  todoName: string;
+  todoDescription: string;
+}
+
 // function getTodoList() {
 //   return axios
 //     .get("https://6819b1b61ac115563505ccb2.mockapi.io/todo/tododetails")
 //     .then((res) => res.data);
 // }
 
-const getTodoList = async () => {
+const getTodoList = async (): Promise<TodoItem[]> => {
   const response = await todoinstance.get("/");
   return response.data;
 };
@@ -31,11 +38,11 @@ const getTodoList = async () => {
 //     .then((res) => res.data);
 // }
 
-const posttodoitem = async ({ formdata }) => {
+const posttodoitem = async (formdata: TodoItem): Promise<void> => {
   const response = await todoinstance.post("/", {
     ...formdata,
     todoStatus: false,
-    id: Date.now().toString(),
+    id: Date.now(),
   });
   return response.data;
 };
@@ -47,7 +54,7 @@ const posttodoitem = async ({ formdata }) => {
 //     )
 //     .then((res) => res.data);
 // }
-const deletetodoitem = async (id) => {
+const deletetodoitem = async (id: number | null) => {
   let response = await todoinstance.delete(`/${id}`);
   return response.data;
 };
@@ -60,7 +67,7 @@ const deletetodoitem = async (id) => {
 //     )
 //     .then((res) => res.data);
 // }
-const updatestatus = async ({ id, ...list }) => {
+const updatestatus = async ({ id, ...list }: TodoItem) => {
   let response = await todoinstance.put(`/${id}`, list);
   return response.data;
 };
@@ -77,7 +84,7 @@ const updatestatus = async ({ id, ...list }) => {
 //     .then((res) => res.data);
 // }
 
-const updateTodoitem = async ({ formdata }) => {
+const updateTodoitem = async (formdata: TodoItem) => {
   let response = await todoinstance.put(`/${formdata.id}`, {
     ...formdata,
   });
